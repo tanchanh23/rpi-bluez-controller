@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Elavator Dashboard</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../static/css/bootstrap4/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/fontawesome5.14/css/all.min.css" />
+
+    <link href="../static/css/bootstrap4-toggle/bootstrap4-toggle.min.css" rel="stylesheet" />
+
+    <script src="../static/js/jquery3/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap4/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap4-toggle/bootstrap4-toggle.min.js"></script>
+    <script src="../static/js/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="../static/js/bootstrap-password-toggler.min.js"></script>
+    <script src="../static/js/jquery-progress-upload.js"></script>
+
+    <style>
+        body {
+            height: 100%;
+            background-color: #000000;
+        }
+        
+        .toggle.ios,
+        .toggle-on.ios,
+        .toggle-off.ios {
+            border-radius: 20rem;
+        }
+        
+        .toggle.ios .toggle-handle {
+            border-radius: 20rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header id="main-header" class="py-2 bg-primary text-white">
+            <div class="row justify-content-md-center">
+                <div class="col-md-6 text-center">
+                    <h2>Elavator Air Admin</h2>
+                    <h5 id="app-version">0.1.0</h5>
+                </div>
+            </div>
+        </header>
+
+        <div class="jumbotron bg-light">
+            <div class="form-group row">
+                <label for="localtime" class="col-form-label col-sm-2 text-left">Date & Time:</label>
+                <div class="input-group col-sm-5">
+                    <input type="datetime-local" class="form-control" id="localtime" disabled />
+                </div>
+                <div class="input-group col-sm-5">
+                    <input type="datetime-local" class="form-control" id="settime" />
+                    <div class="input-group-append">
+                        <input type="button" class="input-group-text h4" id="update-time-btn" value="Update" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default mt-3 mb-3">
+                <div class="card-header h4">
+                    Configurations
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <hr />
+                            <div class="form-group row form-inline">
+                                <label for="blename" class="col-form-label col-sm-4 mt-2">BLE Name:</label>
+                                <div class="input-group col-sm-8">
+                                    <input type="text" class="form-control" id="blename" />
+                                    <div class="input-group-append">
+                                        <input type="button" class="input-group-text h4" id="change-blename" value="Change" onclick="change_ble_name()" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row form-inline">
+                                <label for="wifi-ssid" class="col-form-label col-sm-4 mt-2">Hotsopt SSID:</label>
+                                <div class="input-group col-sm-8">
+                                    <input type="text" class="form-control" id="wifi-ssid" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row form-inline">
+                                <label for="wifi-psk" class="col-form-label col-sm-4 mt-2">Hotsopt PSK:</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control col-12" id="wifi-psk" data-toggle="password" />
+                                </div>
+                            </div>
+                            <div class="flex-row">
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-success btn-fresh btn-sm" id="update_hotsopt" onclick="update_hostspot()">
+                    Update Hotspot
+                  </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <hr />
+                            <div class="form-group row form-inline">
+                                <label for="system-mode" class="col-sm-6 col-6 mt-2 text-right">System Mode:</label>
+                                <div class="col-sm-6 col-6 text-center">
+                                    <input type="checkbox" data-toggle="toggle" data-size="sm" id="system-mode" data-onstyle="success" data-offstyle="warning" data-on="Automatic" data-off="Manual" data-style="ios" onchange="change_configuration('system-mode')" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row form-inline">
+                                <label for="smoke-enable" class="col-form-label col-sm-6 col-6">Smoke Detection:</label>
+                                <div class="col-sm-6 col-6 text-center">
+                                    <input type="checkbox" data-toggle="toggle" data-size="sm" id="smoke-enable" data-onstyle="primary" data-on="Enable" data-off="Disable" data-style="ios" onchange="change_configuration('smoke-enable')" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row form-inline">
+                                <label for="temp-monitor" class="col-form-label col-sm-6 col-6">Temperature Monitor:</label>
+                                <div class="col-sm-6 col-6 text-center">
+                                    <input type="checkbox" data-toggle="toggle" data-size="sm" id="temp-monitor" data-onstyle="primary" data-on="Enable" data-off="Disable" data-style="ios" onchange="change_configuration('temp-monitor')" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row form-inline">
+                                <label for="temp-threshold" class="col-sm-6">Threshold(&#8451;):</label>
+                                <div class="input-group col-sm-6">
+                                    <input type="text" id="temp-threshold" class="form-control text-right" />
+                                    <div class="input-group-append">
+                                        <input type="submit" class="input-group-text" value="Update" onclick="change_configuration('temp-threshold')" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default mt-3 mb-3">
+                <div class="card-header h4">
+                    Sensors & Actuators
+                </div>
+                <div class="card-body">
+                    <legend>Grove Gas Sensor(MQ2)</legend>
+                    <div class="row form-inline">
+                        <label for="mq2-adc" class="col-sm-2 col-5 text-center">ADC:</label>
+                        <div id="mq2-adc" class="col-sm-2 col-3 text-right" aria-describedby="mq2-adc-inline">
+                            480
+                        </div>
+                        <small id="mq2-adc-inline" class="text-muted col-sm-2 col-4 text-left">
+              (0 ~ 1023)
+            </small>
+
+                        <label for="mq2-ppm" class="col-sm-2 col-5 text-center">PPM:</label>
+                        <div id="mq2-ppm" class="col-sm-2 col-3 text-right" aria-describedby="mq2-ppm-inline">
+                            250
+                        </div>
+                        <small id="mq2-ppm-inline" class="text-muted col-sm-2 col-4 text-left">
+              (100 ~ 10000)
+            </small>
+                    </div>
+
+                    <hr />
+
+                    <legend>Grove Temp/Humi Sensor</legend>
+                    <div class="row form-inline">
+                        <label for="dht-temp" class="col-sm-2 col-5 text-center">Temperature:</label>
+                        <div id="dht-temp" class="col-sm-2 col-3 text-right" aria-describedby="dht-temp-inline">
+                            29.5
+                        </div>
+                        <small id="dht-temp-inline" class="text-muted col-sm-2 col-4 text-left">
+              (0 ~ 50&#8451;)
+            </small>
+
+                        <label for="dht-humi" class="col-sm-2 col-5 text-center">Humidity:</label>
+                        <div id="dht-humi" class="col-sm-2 col-3 text-right" aria-describedby="dht-humi-inline">
+                            64.3
+                        </div>
+                        <small id="dht-humi-inline" class="text-muted col-sm-2 col-4 text-left">
+              (20 ~ 90%)
+            </small>
+                    </div>
+
+                    <hr />
+                    <legend>Grove 2ch SPTD Relay</legend>
+                    <div class="row form-inline">
+                        <label for="fan-relay" class="col-sm-2 text-center">Fan Relay:</label>
+                        <div class="col-sm-4 col-6 text-center relay-force" data-name="fan-relay">
+                            <input type="checkbox" data-toggle="toggle" data-size="sm" id="fan-relay" data-onstyle="danger" data-on="On" data-off="Off" data-style="ios" onchange="change_relay_switch('fan-relay')" />
+                        </div>
+
+                        <label for="speed-relay" class="col-sm-2 text-center">Speed Relay:</label>
+                        <div class="col-sm-4 col-6 text-center relay-force" data-name="speed-relay">
+                            <input type="checkbox" data-toggle="toggle" data-size="sm" id="speed-relay" data-onstyle="warning" data-offstyle="success" data-on="Fast" data-off="Low" data-style="ios" onchange="change_relay_switch('speed-relay')" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-default mt-3 mb-3">
+                <div class="card-header h4">
+                    Schedules
+                </div>
+                <div class="card-body" id="schedules">
+                    <!-- <div class="card card-default mt-3 mb-3">
+                    <div class="card-header h5 bg-white">
+                      <div class="row justify-content-between">
+                        <span class="ml-2">Morning</span>
+                        <input
+                          type="checkbox"
+                          data-toggle="toggle"
+                          data-size="sm"
+                          data-onstyle="danger"
+                          data-on="On"
+                          data-off="Off"
+                          data-style="ios"
+                          class="col"
+                        />
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row form-inline">
+                        <label class="col-sm-2 col-4 text-left">Start:</label>
+                        <input type="time" required class="col-sm-4 col-8" />
+      
+                        <label class="col-sm-2 col-4 text-left">End:</label>
+                        <input type="time" required class="col-sm-4 col-8" />
+                      </div>
+      
+                      <label class="text-left mt-4">Select Date</label>
+                      <div class="row form-inline">
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Mon"
+                            data-off="Mon"
+                            data-style="ios"
+                            class="col"
+                          />
+                        </div>
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Tue"
+                            data-off="Tue"
+                            data-style="ios"
+                            class="col"
+                          />
+                        </div>
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Wed"
+                            data-off="Wed"
+                            data-style="ios"
+                          />
+                        </div>
+      
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Thu"
+                            data-off="Thu"
+                            data-style="ios"
+                          />
+                        </div>
+      
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Fri"
+                            data-off="Fri"
+                            data-style="ios"
+                            class="col"
+                          />
+                        </div>
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Sat"
+                            data-off="Sat"
+                            data-style="ios"
+                            class="col"
+                          />
+                        </div>
+                        <div class="col-sm col-3">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-size="xs"
+                            data-onstyle="danger"
+                            data-on="Sun"
+                            data-off="Sun"
+                            data-style="ios"
+                            class="col"
+                          />
+                        </div>
+                      </div>
+      
+                      <div class="row form-inline mt-4">
+                        <div class="col-sm row form-inline">
+                          <div class="text-center col-sm-2 col-4">
+                            <i class="fas fa-fan fa-2x"></i>
+                          </div>
+                          <div class="text-center col-sm-4 col-4">
+                            Fan
+                          </div>
+                          <div class="text-right col-sm-6 col-4">
+                            <input
+                              type="checkbox"
+                              data-toggle="toggle"
+                              data-size="sm"
+                              data-onstyle="danger"
+                              data-on=" "
+                              data-off=" "
+                              data-style="ios"
+                            />
+                          </div>
+                        </div>
+      
+                        <div class="col-sm row form-inline">
+                          <div class="text-center col-sm-2 col-4">
+                            <i class="far fa-lightbulb fa-2x"></i>
+                          </div>
+                          <div class="text-center col-sm-4 col-4">
+                            Light
+                          </div>
+                          <div class="text-right col-sm-6 col-4">
+                            <input
+                              type="checkbox"
+                              data-toggle="toggle"
+                              data-size="sm"
+                              data-onstyle="danger"
+                              data-on=" "
+                              data-off=" "
+                              data-style="ios"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
+            </div>
+
+            <div class="card card-default mt-3 mb-3">
+                <div class="card-header h4">
+                    Update System
+                </div>
+                <div class="card-body">
+                    <fieldset>
+                        <legend>Upload archived & update</legend>
+                        <form class="" method="POST" action="/zipupdate" enctype="multipart/form-data" id="uploadform">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="sourcefile" id="updatesystem" accept=".zip" />
+                                    <label class="custom-file-label" for="updatesystem" id="systemfile">Choose zipped source...</label>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <input type="submit" class="input-group-text" value="Update" id="upload-zip" />
+                                </div>
+                            </div>
+                            <script>
+                                $("#updatesystem").change((e) => {
+                                    if (e.target.files.length === 0) return;
+                                    const fileName = e.target.files[0].name;
+                                    $("#systemfile").html(fileName);
+                                });
+                            </script>
+                        </form>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <span class="text-light">@2020 Ray Matos</span>
+        </footer>
+    </div>
+</body>
+<script src="../static/js/index.js"></script>
+
+</html>
