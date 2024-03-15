@@ -1,0 +1,9 @@
+{
+  "advertise_name": "ElevatorAir",
+  "system_mode": true,
+  "smoke_detection": true,
+  "temperature_monitor": true,
+  "temperature_threshold": 90,
+  "ssid": "ElevatorAir",
+  "fan_speed": "fast"
+}
